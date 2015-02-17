@@ -31,11 +31,11 @@ func main() {
 	flag.Parse()
 	circle_url := "https://circleci.com/cc.xml?circle-token=" + CIRCLECI_API_TOKEN
 	buildFeed := cci.Feed{
-		url: circle_url,
+		Url: circle_url,
 	}
 
 	for {
-		go buildFeed.poll()
+		go buildFeed.Poll()
 
 		if RUN_ONCE == true {
 			os.Exit(0)

@@ -8,13 +8,14 @@ import (
 	"net/http"
 )
 
+// Feed represents a MPSR capable feed
 type Feed struct {
 	Url      string
 	projects []Project
 }
 
 // poll fetches the build feed
-func (f Feed) poll() ([]Project, error) {
+func (f *Feed) Poll() ([]Project, error) {
 	log.Println("Fetching: ", f.Url)
 	res, err := http.Get(f.Url)
 	if err != nil {
