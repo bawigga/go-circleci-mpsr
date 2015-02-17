@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestProjectProperties(t *testing.T) {
+func TestProjectFields(t *testing.T) {
 	p := Project{
 		Name:            "bawigga/circleci-feed",
 		Activity:        "Sleeping",
