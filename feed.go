@@ -9,14 +9,14 @@ import (
 )
 
 type Feed struct {
-	url      string
+	Url      string
 	projects []Project
 }
 
 // poll fetches the build feed
 func (f Feed) poll() ([]Project, error) {
-	log.Println("Fetching: ", f.url)
-	res, err := http.Get(f.url)
+	log.Println("Fetching: ", f.Url)
+	res, err := http.Get(f.Url)
 	if err != nil {
 		log.Fatal(err)
 	}

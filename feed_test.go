@@ -6,9 +6,9 @@ import (
 
 func TestFeedFields(t *testing.T) {
 	feed := Feed{}
-	feed.url = "example.com"
+	feed.Url = "example.com"
 
-	if feed.url != "example.com" {
-		t.Fatalf("expected: %v, got: %v", "example.com", feed.url)
+	if feed.Url != "example.com" {
+		t.Fatalf("expected: %v, got: %v", "example.com", feed.Url)
 	}
 }
