@@ -2,7 +2,6 @@ package circleci_mpsr
 
 import (
 	"encoding/xml"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -20,6 +19,8 @@ func (f *Feed) Poll() ([]Project, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// fixme: code smell
 	return f.parseXml(xmlData)
 }
 
@@ -37,26 +38,18 @@ func (f *Feed) fetchFeedXML() ([]byte, error) {
 	return ioutil.ReadAll(res.Body)
 }
 
-// parseXml returns the projects xml from circleci.com with the provided api token
+// parseXml parses the XML feed and returns a slice of projects
 func (f *Feed) parseXml(xmlData []byte) ([]Project, error) {
 
-	p := projectsXmlRoot{}
+	var response struct {
+		XMLName  xml.Name  `xml:"Projects"`
+		Projects []Project `xml:"Project"`
+	}
 
-	err := xml.Unmarshal(xmlData, &p)
+	err := xml.Unmarshal(xmlData, &response)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	f.Projects = p.Projects
-
-	projectCount := len(f.Projects)
-	if projectCount == 0 {
-		fmt.Println("No projects found")
-	} else {
-		fmt.Printf("Found %v project(s).\n", projectCount)
-	}
-
-	// fmt.Printf(": %v", projects.ProjectList)
-
-	return f.Projects, err
+	return response.Projects, err
 }
