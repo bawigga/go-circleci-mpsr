@@ -45,9 +45,8 @@ func (f *Feed) parseXml(xmlData []byte) ([]Project, error) {
 		XMLName  xml.Name  `xml:"Projects"`
 		Projects []Project `xml:"Project"`
 	}
-
-	err := xml.Unmarshal(xmlData, &response)
-	if err != nil {
+	var err error
+	if err = xml.Unmarshal(xmlData, &response); err != nil {
 		log.Panic(err)
 	}
 

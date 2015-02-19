@@ -40,8 +40,7 @@ func TestProjectFields(t *testing.T) {
 		t.Fatalf("expected: %v, got: %v", "2015-02-10T08:30:00.800Z", p.NextBuildTime)
 	}
 
-	expectedUrl := "https://circleci.com/gh/bawigga/circleci-feed/tree/master"
-	if p.WebUrl != expectedUrl {
+	if expectedUrl := "https://circleci.com/gh/bawigga/circleci-feed/tree/master"; p.WebUrl != expectedUrl {
 		t.Fatalf("expected: %v, got: %v", expectedUrl, p.WebUrl)
 	}
 }
@@ -57,8 +56,8 @@ func TestProjectFromXML(t *testing.T) {
 				 webUrl="https://circleci.com/gh/bawigga/circleci-feed/tree/master"></Project>
 	`
 	project := Project{}
-	err := xml.Unmarshal([]byte(xmlData), &project)
-	if err != nil {
+
+	if err := xml.Unmarshal([]byte(xmlData), &project); err != nil {
 		t.Fatalf("%v", err)
 	}
 
@@ -86,8 +85,7 @@ func TestProjectFromXML(t *testing.T) {
 		t.Fatalf("expected: %v, got: %v", "2015-02-10T16:00:00.800Z", project.NextBuildTime)
 	}
 
-	expectedUrl := "https://circleci.com/gh/bawigga/circleci-feed/tree/master"
-	if project.WebUrl != expectedUrl {
+	if expectedUrl := "https://circleci.com/gh/bawigga/circleci-feed/tree/master"; project.WebUrl != expectedUrl {
 		t.Fatalf("expected: %v, got: %v", expectedUrl, project.WebUrl)
 	}
 }
@@ -101,14 +99,14 @@ func TestProjectsFromXML(t *testing.T) {
 		</Projects>
 	`
 	v := projectsXmlRoot{}
-	err := xml.Unmarshal([]byte(xmlData), &v)
-	if err != nil {
+
+	if err := xml.Unmarshal([]byte(xmlData), &v); err != nil {
 		t.Fatalf("%v", err)
 	}
+
 	projects := v.Projects
 
-	projectCount := len(projects)
-	if projectCount != 2 {
+	if projectCount := len(projects); projectCount != 2 {
 		t.Fatalf("Expected 2 projects but got %v", projectCount)
 	}
 
