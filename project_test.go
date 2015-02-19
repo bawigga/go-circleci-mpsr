@@ -100,15 +100,23 @@ func TestProjectsFromXML(t *testing.T) {
 			<Project lastBuildTime="2015-02-04T23:26:05.791Z" lastBuildLabel="1027" lastBuildStatus="Success" name="EvoSure/exchange" activity="Sleeping" webUrl="https://circleci.com/gh/EvoSure/exchange/tree/master"></Project>
 		</Projects>
 	`
-	v := projects{}
+	v := projectsXmlRoot{}
 	err := xml.Unmarshal([]byte(xmlData), &v)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
+	projects := v.Projects
 
-	projects := v.ProjectList
 	projectCount := len(projects)
 	if projectCount != 2 {
 		t.Fatalf("Expected 2 projects but got %v", projectCount)
+	}
+
+	if projects[0].LastBuildLabel != "525" {
+		t.Fatalf("Expected LastBuildLabel 525 but got %v", projects[0].LastBuildLabel)
+	}
+
+	if projects[1].LastBuildLabel != "1027" {
+		t.Fatalf("Expected LastBuildLabel 1027 but got %v", projects[1].LastBuildLabel)
 	}
 }

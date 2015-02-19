@@ -11,11 +11,20 @@ import (
 // Feed represents a MPSR capable feed
 type Feed struct {
 	Url      string
-	projects []Project
+	Projects []Project
 }
 
-// poll fetches the build feed
+// Poll fetches the build feed
 func (f *Feed) Poll() ([]Project, error) {
+	xmlData, err := f.fetchFeedXML()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return f.parseXml(xmlData)
+}
+
+// fetchFeedXML fetches the Url for the feed and returns the bytes
+func (f *Feed) fetchFeedXML() ([]byte, error) {
 	log.Println("Fetching: ", f.Url)
 	res, err := http.Get(f.Url)
 	if err != nil {
@@ -25,25 +34,22 @@ func (f *Feed) Poll() ([]Project, error) {
 	// close out the body
 	defer res.Body.Close()
 
-	xml, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return parseXml(xml)
+	return ioutil.ReadAll(res.Body)
 }
 
-// FromXml returns the projects xml from circleci.com with the provided
-// api token
-func parseXml(xmlData []byte) ([]Project, error) {
+// parseXml returns the projects xml from circleci.com with the provided api token
+func (f *Feed) parseXml(xmlData []byte) ([]Project, error) {
 
-	projects := []Project{}
+	p := projectsXmlRoot{}
 
-	err := xml.Unmarshal(xmlData, &projects)
+	err := xml.Unmarshal(xmlData, &p)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	projectCount := len(projects)
+	f.Projects = p.Projects
+
+	projectCount := len(f.Projects)
 	if projectCount == 0 {
 		fmt.Println("No projects found")
 	} else {
@@ -52,5 +58,5 @@ func parseXml(xmlData []byte) ([]Project, error) {
 
 	// fmt.Printf(": %v", projects.ProjectList)
 
-	return projects, err
+	return f.Projects, err
 }

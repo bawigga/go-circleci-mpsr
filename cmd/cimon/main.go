@@ -35,7 +35,7 @@ func main() {
 	}
 
 	for {
-		go buildFeed.Poll()
+		buildFeed.Poll()
 
 		if RUN_ONCE == true {
 			os.Exit(0)
